@@ -1,60 +1,373 @@
 <!doctype html>
 <html lang="it">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Landing</title>
 
-    <!-- Fonts (match main.css choices) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Space+Mono:wght@400;700&family=Fragment+Mono&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Landing</title>
 
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <header class="image-header" aria-label="Header image">
-      <img src="banner-festival.png" alt="" />
-    </header>
+  <!-- Fonts (match main.css choices) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Space+Mono:wght@400;700&family=Fragment+Mono&display=swap"
+    rel="stylesheet" />
+  <style>
+    /*
+        index.css
+        - Uses the same palette + fonts from main.css
+        - Layout:
+          - Header image
+          - 1 wide tile
+          - 2x2 tiles
+          - Mobile: all tiles stacked (5 squares/blocks)
+      */
 
-    <main class="grid" aria-label="Navigation">
-      <!-- 1) Large full-width section -->
-      <a class="tile tile--wide" href="#" data-href="https://www.nina.watch/partecipa.html">
-        <span class="tile__label">Il collettivo e le iniziative crescono </span>
-        <span class="tile__title">Stiamo in contatto</span>
-        <span class="tile__hint">Tieni premuto per lasciarci un'email o altri riferimenti</span>
-      </a>
+    :root {
+      /* Palette from main.css */
+      --black: #0a0a0a;
+      --white: #f5f0e8;
+      --lime: #c8f500;
+      --pink: #ff2d6b;
+      --yellow: #ffe600;
+      --purple: #b48cff;
+      --cyan: #00e5ff;
 
-      <!-- 2) 2x2 sections -->
-      <a class="tile tile--sq" href="#" data-href="https://supporta.nina.watch/milano">
-        <span class="tile__label">Festival, Il programma</span>
-        <span class="tile__title">Milano</span>
-        <span class="tile__hint">Tieni premuto per andare al programma completo</span>
-      </a>
+      --color-bg: var(--white);
+      --color-text: var(--black);
+      --color-text-muted: #666;
+      --color-accent: var(--lime);
+      --color-border: #ddd;
+      --color-surface: #eae5db;
 
-      <a class="tile tile--sq" href="#" data-href="https://supporta.nina.watch/roma">
-        <span class="tile__label">Festival, Il programma</span>
-        <span class="tile__title">Roma</span>
-        <span class="tile__hint">Come a Milano, ingresso libero ma iscrizione suggerita</span>
-      </a>
+      --card-1: var(--pink);
+      --card-2: var(--purple);
+      --card-3: var(--lime);
+      --card-4: var(--cyan);
 
-      <a class="tile tile--sq" href="#" data-href="https://nina.watch">
-        <span class="tile__label">Il nostro sito</span>
-        <span class="tile__title">nina.watch</span>
-        <span class="tile__hint">Tieni premuto per 800 millisecondi, e vedrai 3 anni di storia documentata di critica all'AI</span>
-      </a>
+      --font-display: 'Hanken Grotesk', sans-serif;
+      --font-body: 'Hanken Grotesk', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --font-mono-alt: 'Fragment Mono', monospace;
 
-      <a class="tile tile--sq" href="#" data-href="https://www.nina.watch/rivista.html">
-        <span class="tile__label">L'ultima arrivata</span>
-        <span class="tile__title">La rivista</span>
-        Puoi prenderla al festival o leggerla online
-        <span class="tile__hint">Vai alla pagina dedicata</span>
-      </a>
-    </main>
+      /* Long-press navigation (customizable) */
+      --press-duration: 800ms;
 
-    <script src="index.js" defer></script>
-  </body>
+      /* Spacing */
+      --gap: 12px;
+      --max-width: 1200px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .image-header {
+      width: 100%;
+      background: var(--black);
+    }
+
+    .image-header img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 42vh;
+      object-fit: cover;
+    }
+
+    .grid {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 18px;
+
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--gap);
+    }
+
+    /* Wide section spans full width on desktop/tablet */
+    .tile--wide {
+      grid-column: 1 / -1;
+    }
+
+    /* Make all tiles same height (wide + squares) */
+    .tile {
+      position: relative;
+      display: block;
+
+      min-height: 240px;
+      height: 32vh;
+      /* helps equalize across viewports */
+      max-height: 420px;
+
+      padding: 22px;
+      border: 1.5px solid rgba(0, 0, 0, 0.08);
+      text-decoration: none;
+      color: var(--black);
+
+      background: var(--card-bg, var(--card-1));
+      overflow: hidden;
+
+      transition: transform 160ms ease, opacity 160ms ease;
+      touch-action: manipulation;
+    }
+
+    /* Assign palette cycling similarly to cards in main.css */
+    .tile--wide {
+      --card-bg: var(--card-1);
+      color: var(--white);
+    }
+
+    .tile:nth-of-type(2) {
+      --card-bg: var(--card-2);
+    }
+
+    .tile:nth-of-type(3) {
+      --card-bg: var(--card-3);
+    }
+
+    .tile:nth-of-type(4) {
+      --card-bg: var(--card-4);
+    }
+
+    .tile:nth-of-type(5) {
+      --card-bg: var(--yellow);
+    }
+
+    .tile:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .tile__label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-bottom: 1.5px solid currentColor;
+      padding-bottom: 2px;
+      margin-bottom: 12px;
+    }
+
+    .tile__title {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+      line-height: 1.1;
+    }
+
+    .tile__hint {
+      position: absolute;
+      left: 22px;
+      bottom: 18px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+
+    /* Long-press animation */
+    .tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.14);
+      transform: translateX(-100%);
+      pointer-events: none;
+    }
+
+    .tile.is-pressing::after {
+      transform: translateX(0);
+      transition: transform var(--press-duration) linear;
+    }
+
+    .tile.is-pressed {
+      transform: scale(0.99);
+    }
+
+    /* Mobile: stack everything in one column (5 blocks) */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+
+      .tile--wide {
+        grid-column: auto;
+      }
+
+      .tile {
+        height: 24vh;
+        min-height: 200px;
+        max-height: 340px;
+      }
+    }
+
+    /* Reduce motion preference */
+    @media (prefers-reduced-motion: reduce) {
+
+      .tile,
+      .tile:hover {
+        transition: none;
+        transform: none;
+      }
+
+      .tile.is-pressing::after {
+        transition: none;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="image-header" aria-label="Header image">
+    <img src="banner-festival.png" alt="" />
+  </header>
+
+  <main class="grid" aria-label="Navigation">
+    <!-- 1) Large full-width section -->
+    <a class="tile tile--wide" href="#" data-href="https://www.nina.watch/partecipa.html">
+      <span class="tile__label">Il collettivo e le iniziative crescono </span>
+      <span class="tile__title">Stiamo in contatto</span>
+      <span class="tile__hint">Tieni premuto per lasciarci un'email o altri riferimenti</span>
+    </a>
+
+    <!-- 2) 2x2 sections -->
+    <a class="tile tile--sq" href="#" data-href="https://supporta.nina.watch/milano">
+      <span class="tile__label">Festival, Il programma</span>
+      <span class="tile__title">Milano</span>
+      <span class="tile__hint">Tieni premuto per andare al programma completo</span>
+    </a>
+
+    <a class="tile tile--sq" href="#" data-href="https://supporta.nina.watch/roma">
+      <span class="tile__label">Festival, Il programma</span>
+      <span class="tile__title">Roma</span>
+      <span class="tile__hint">Come a Milano, ingresso libero ma iscrizione suggerita</span>
+    </a>
+
+    <a class="tile tile--sq" href="#" data-href="https://nina.watch">
+      <span class="tile__label">Il nostro sito</span>
+      <span class="tile__title">nina.watch</span>
+      <span class="tile__hint">Tieni premuto per 800 millisecondi, e vedrai 3 anni di storia documentata di critica
+        all'AI</span>
+    </a>
+
+    <a class="tile tile--sq" href="#" data-href="https://www.nina.watch/rivista.html">
+      <span class="tile__label">L'ultima aggiunta</span>
+      <span class="tile__title">La rivista</span>
+      Puoi prenderla al festival o leggerla online
+      <span class="tile__hint">Vai alla pagina dedicata</span>
+    </a>
+  </main>
+  <script>
+    /*
+      index.js
+      Long-press to navigate (mobile-friendly)
+      - Default duration: 800ms
+      - Customizable via CSS variable --press-duration on :root or per-tile
+      - Destination is read from data-href
+
+      Usage:
+        <a class="tile" data-href="/somewhere"></a>
+
+      Notes:
+      - Click without long-press is prevented (to avoid accidental navigation)
+      - Keyboard still works: Enter/Space navigates immediately
+    */
+
+    (function () {
+      /** @param {Element} el */
+      function getPressDurationMs(el) {
+        const v = getComputedStyle(el).getPropertyValue('--press-duration').trim();
+        if (!v) return 800;
+        // supports '800ms' or '0.8s'
+        if (v.endsWith('ms')) return Number.parseFloat(v);
+        if (v.endsWith('s')) return Number.parseFloat(v) * 1000;
+        const asNum = Number.parseFloat(v);
+        return Number.isFinite(asNum) ? asNum : 800;
+      }
+
+      function setupTile(tile) {
+        let timerId = null;
+        let pressing = false;
+
+        const href = tile.getAttribute('data-href') || tile.getAttribute('href');
+
+        // Prevent accidental tap navigation; we navigate ourselves after long-press.
+        tile.addEventListener('click', (e) => {
+          // If user is holding, or we haven't triggered long press, don't navigate.
+          // Keyboard activation will be handled separately.
+          e.preventDefault();
+        });
+
+        function startPress(e) {
+          // Only primary button if mouse
+          if (e.type === 'mousedown' && e.button !== 0) return;
+          if (!href || href === '#') return;
+
+          // ignore if already pressing
+          if (pressing) return;
+          pressing = true;
+
+          tile.classList.add('is-pressed');
+          tile.classList.add('is-pressing');
+
+          const duration = getPressDurationMs(tile);
+          timerId = window.setTimeout(() => {
+            window.location.href = href;
+          }, duration);
+        }
+
+        function cancelPress() {
+          pressing = false;
+          if (timerId) {
+            window.clearTimeout(timerId);
+            timerId = null;
+          }
+          tile.classList.remove('is-pressing');
+          tile.classList.remove('is-pressed');
+        }
+
+        // Pointer Events (covers touch + mouse in modern browsers)
+        tile.addEventListener('pointerdown', startPress);
+        tile.addEventListener('pointerup', cancelPress);
+        tile.addEventListener('pointercancel', cancelPress);
+        tile.addEventListener('pointerleave', cancelPress);
+
+        // Keyboard accessibility: immediate navigation
+        tile.addEventListener('keydown', (e) => {
+          if (!href || href === '#') return;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.location.href = href;
+          }
+        });
+      }
+
+      document.querySelectorAll('.tile').forEach(setupTile);
+    })();
+  </script>
+</body>
+
 </html>
